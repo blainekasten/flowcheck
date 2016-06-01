@@ -6,10 +6,10 @@ const stripFlow = require('babel-plugin-transform-flow-strip-types');
 // this is the code that will get parsed
 const code = `
 /*
-* @testcheck(base, exponent) {
-*   pow(base, exponent) === Math.pow(base, exponent)
-* }
-*/
+ * @testcheck(base, exponent) {
+ *   return pow(base, exponent) === Math.pow(base, exponent)
+ * }
+ */
 function pow(base, exponent) {
   var result = 1;
   while (--exponent > 0) {

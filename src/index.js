@@ -1,5 +1,5 @@
+/* eslint-disable no-use-before-define */
 "use strict";
-const nameFunction = require('babel-helper-function-name');
 
 module.exports = function flowParser(babel) {
   const t = babel.types;
@@ -11,18 +11,18 @@ module.exports = function flowParser(babel) {
       Program: {
         enter(path, state) {
           state.file.set('hasTestcheck', false);
+          state.file.set('hasTestcheckGenVar', false);
         },
 
         exit(path, state) {
           if (!state.file.get('hasTestcheck') || path.scope.hasBinding('testcheck')) return;
 
           // put testcheck import at the top of file
-          const testcheckImportDeclaration = t.importDeclaration([
-            t.importDefaultSpecifier(t.identifier('testcheck')),
-          ], t.stringLiteral('testcheck'));
+          const testcheckImportDeclaration = t.importDeclaration(
+            [ t.importDefaultSpecifier(t.identifier('testcheck')) ],
+            t.stringLiteral('testcheck')
+          );
 
-          const globalGenDeclaration = t.expressionk
-          
           path.node.body.unshift(testcheckImportDeclaration);
         },
       },
@@ -46,19 +46,67 @@ module.exports = function flowParser(babel) {
         },
 
         exit(path, state) {
-          if (!state.file.get('hasTestcheck')) return;
-
-          if (path.parent.scope) {
-            path.parent.scope.push({
-              id: t.identifier('__gen'),
-              init: t.identifier('_testcheck2.gen'), // bug needs to get from path
-            });
+          if (!state.file.get('hasTestcheckGenVar')) {
+            addTestcheckGenVariable(path, t);
+            state.file.set('hasTestcheckGenVar', true);
           }
+
+          addTestcheck(path, t, state);
         },
       },
     },
   };
 };
+
+function addTestcheck(path, t, state) {
+  const checkCall = t.memberExpression(
+    t.identifier('testcheck'),
+    t.identifier('check')
+  );
+
+  const propertyCall = t.memberExpression(
+    t.identifier('testcheck'),
+    t.identifier('property')
+  );
+
+  const testcheckArgs = [];
+
+  console.log(state.args)
+
+
+  const fn = t.callExpression(checkCall, [
+    t.callExpression(propertyCall, [
+      t.arrayExpression(testcheckArgs),
+      t.identifier(path.node.id.name),
+    ]),
+  ]);
+  path.insertAfter(fn);
+}
+
+// adds testcheck to the module definition
+function addTestcheckGenVariable(path, t) {
+  // right side of `var gen =``
+  const gen = t.memberExpression(
+    t.identifier('testcheck'),
+    t.identifier('gen')
+  );
+
+  // finds top-most path
+  const childOfProgramPath = path.find(
+    _path => _path.parentPath.isProgram()
+  );
+
+  // create a unique variable in that path
+  const uid = childOfProgramPath.scope.generateUidIdentifier('gen');
+
+  // create the variable declaration
+  const genVar = t.variableDeclaration('var', [
+    t.variableDeclarator(uid, gen),
+  ]);
+
+  // add variable to code
+  childOfProgramPath.insertBefore(genVar);
+}
 
 function buildFunctionArgumentState(path) {
   const args = path.node.params.map(
@@ -69,7 +117,7 @@ function buildFunctionArgumentState(path) {
     args,
     nextIndex: 0,
   };
-};
+}
 
 const flowTagEvaluator = {
   Flow(path, state) {
