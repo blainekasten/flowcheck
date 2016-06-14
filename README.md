@@ -1,5 +1,7 @@
 # flow-typecheck
 
+![](http://g.recordit.co/JJcGkIblZj.gif)
+
 This is very much a WIP.
 
 But the goal is to make using testcheck super easy in JS without requiring much work
