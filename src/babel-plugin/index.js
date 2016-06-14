@@ -9,7 +9,6 @@ module.exports = function flowParser() {
   const TESTCHECK_DIRECTIVE = '@testcheck';
 
   return {
-    inherits: require('babel-plugin-syntax-flow'),
     visitor: {
       Program: {
         exit(path) {

@@ -22,12 +22,16 @@ const babel = require('babel-core');
 const testcheckParser = require('./babel-plugin');
 const es2015 = require('babel-preset-es2015');
 const stripFlow = require('babel-plugin-transform-flow-strip-types');
+const syntaxFlow = require('babel-plugin-syntax-flow');
 
 
 module.exports = function parseStringifiedCode(code) {
   return babel.transform(code, {
-    presets: [es2015],
+    presets: [
+      es2015
+    ],
     plugins: [
+      syntaxFlow,
       testcheckParser,
       stripFlow,
     ],
