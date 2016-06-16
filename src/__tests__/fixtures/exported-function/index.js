@@ -9,6 +9,6 @@
  *   return foo(bar) === bar;
  * }
  */
-export function foo(bar:number) {
+/*export*/ function foo(bar:number) {
   return bar;
 }

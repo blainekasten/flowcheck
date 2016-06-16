@@ -28,7 +28,6 @@ module.exports = {
 
     const argumentObject = args.args[args.nextIndex];
 
-    console.log('!!', argumentObject)
     if (!argumentObject) {
       return;
     }

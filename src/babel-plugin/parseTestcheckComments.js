@@ -18,8 +18,44 @@
  * @flow
  */
 
+"use strict";
+
 module.exports = function parseTestcheckComment(comment) {
-  const value = comment.value.replace(/\*/g, '');
-  const fn = value.replace('@testcheck', 'function');
+  let value = comment.value;
+
+  const testcheckDirectiveStartIndex = value.search('@testcheck');
+
+  // trim off any comments prior to testcheck directive
+  value = value.substring(testcheckDirectiveStartIndex, value.length);
+
+  /*
+   * This is for comments of the /* style
+   *
+   * This order is important. We need to trim in the following order:
+   * 1. Leading
+   * 2. Trailing
+   * 3. Middle
+   */
+  value = value.replace(/\/\*/g, ''); // leading `/*`
+  value = value.replace(/\*\//g, ''); // trailing `*/`
+  value = value.replace(/\*\s?/g, ''); // middle `* `
+
+  // this is for this style of comments
+  //or this
+  value = value.replace(/\/\/\s?/g, '');
+
+  const fn = value.replace('@testcheck', 'function testcheck');
+
+  // make sure code is good, throw if not
+  // some parsing error occured
+  try {
+    eval(fn);
+  } catch(e) {
+    throw new Error(
+      'Flowcheck parsing error\n' +
+      '  Parsing the @testcheck comments encountered an error.'
+    );
+  }
+
   return fn;
 };
