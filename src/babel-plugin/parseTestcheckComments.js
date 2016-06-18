@@ -49,7 +49,7 @@ module.exports = function parseTestcheckComment(comment) {
   // make sure code is good, throw if not
   // some parsing error occured
   try {
-    eval(fn);
+    eval(fn); // eslint-disable-line no-eval
   } catch(e) {
     throw new Error(
       'Flowcheck parsing error\n' +
