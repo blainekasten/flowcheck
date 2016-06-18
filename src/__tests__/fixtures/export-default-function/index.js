@@ -1,6 +1,7 @@
 // @NOT_SUPPORTED !!!!!!
 
 
+
 /*
  * Functions that have an export before them hit the parser
  * differently. This is a very expected work-flow, so it is a
@@ -12,6 +13,6 @@
  *   return foo(bar) === bar;
  * }
  */
-export function foo(bar:number) {
+export default function foo(bar:number) {
   return bar;
 }
