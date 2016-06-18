@@ -1,3 +1,5 @@
+'use strict';
+
 jest.autoMockOff();
 const transformCode = require.requireActual('../parseStringifiedCode');
 const fs = require('fs');
@@ -11,14 +13,29 @@ const results = folders.map(folder => {
   const filePath = folderPath + '/index.js';
 
   const actualPretransform = fs.readFileSync(filePath, 'utf8');
+  const shouldThrow = actualPretransform.search('@NOT_SUPPORTED') !== -1;
+  let parsedCode;
+  let didThrow = false;
 
-  const parsedCode = transformCode(actualPretransform);
 
-  const flowcheckResults = eval(parsedCode); // eslint-disable-line no-eval
+  if (shouldThrow) {
+    try {
+      parsedCode = transformCode(actualPretransform);
+    } catch(e) {
+      didThrow = true;
+    }
+  } else {
+    parsedCode = transformCode(actualPretransform);
+  }
+
+  const _results = eval(parsedCode); // eslint-disable-line no-eval
 
   return {
     testType: folder,
-    results: flowcheckResults,
+    results: _results,
+    didThrow,
+    parsedCode,
+    shouldThrow,
   };
 });
 
@@ -26,7 +43,11 @@ const results = folders.map(folder => {
 describe('transform', () => {
   results.forEach(result => {
     it(`works for ${result.testType}`, () => {
-      expect(result.results[0]).toBeDefined();
+      if (result.shouldThrow) {
+        expect(result.didThrow).toBeTruthy();
+      } else {
+        expect(result.results[0]).toBeDefined();
+      }
     });
   });
 });

@@ -22,7 +22,6 @@
 
 module.exports = {
   Flow(path, state) {
-    console.log('wtf')
     if (path.node.type === 'TypeAnnotation') return;
     const args = state.get('args');
 

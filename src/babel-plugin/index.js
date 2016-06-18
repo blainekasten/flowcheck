@@ -57,6 +57,20 @@ module.exports = function flowParser() {
           addTestcheckCall(path, state, state.get('parsedCommentBlock'));
         },
       },
+
+      'ExportNamedDeclaration|ExportDefaultDeclaration'(path) {
+        const comments = path.node.leadingComments;
+        if (!comments) return;
+
+
+        comments.forEach(function checkForDirective(comment) {
+          if (comment.value.search(TESTCHECK_DIRECTIVE) !== -1) {
+            throw new Error(
+              'Flowcheck: Unsupported syntax. Flowcheck does not currently support comments on exported functions'
+            );
+          }
+        });
+      },
     },
   };
 };
