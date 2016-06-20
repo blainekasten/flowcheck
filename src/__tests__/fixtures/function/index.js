@@ -5,7 +5,7 @@
 
 
 /*
- * @testcheck(bar) {
+ * @flowcheck(bar) {
  *   return foo(bar) === bar;
  * }
  */

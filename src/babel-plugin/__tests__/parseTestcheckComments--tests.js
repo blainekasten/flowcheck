@@ -1,24 +1,24 @@
-const _parse = require.requireActual('../parseTestcheckComments');
+const _parse = require.requireActual('../parseFlowcheckComments');
 
-function parseTestcheckComments(value) {
+function parseflowcheckComments(value) {
   return _parse({
     value,
   });
 }
 
 const expectation =
-  'function testcheck() {' +
+  'function flowcheck() {' +
   '}';
 
 describe('parsing comments', () => {
   it('removes the and /* style comments */', () => {
     const comments =
       '/*' +
-       '* @testcheck() {' +
+       '* @flowcheck() {' +
        '* }' +
        '*/';
 
-    const parsed = parseTestcheckComments(comments);
+    const parsed = parseflowcheckComments(comments);
 
     expect(parsed).toBe(expectation);
   });
@@ -26,60 +26,60 @@ describe('parsing comments', () => {
   it('removes the /*style*/ with bad spacing', () => {
     const comments =
       '/*' +
-       '*@testcheck() {' +
+       '*@flowcheck() {' +
        '*}' +
        '*/';
 
-    const parsed = parseTestcheckComments(comments);
+    const parsed = parseflowcheckComments(comments);
 
     expect(parsed).toBe(expectation);
   });
 
   it('removes the // style comments', () => {
     const comments =
-      '// @testcheck() {' +
+      '// @flowcheck() {' +
       '// }';
 
-    const parsed = parseTestcheckComments(comments);
+    const parsed = parseflowcheckComments(comments);
 
     expect(parsed).toBe(expectation);
   });
 
   it('removes the // with bad spacing', () => {
     const comments =
-      '//@testcheck() {' +
+      '//@flowcheck() {' +
       '//}';
 
-    const parsed = parseTestcheckComments(comments);
+    const parsed = parseflowcheckComments(comments);
 
     expect(parsed).toBe(expectation);
   });
 
 
-  it('ignores the extra comments leading the testcheck directive', () => {
+  it('ignores the extra comments leading the flowcheck directive', () => {
     const comments =
       '/*' +
        '* lorem ipsum bull shit' +
-       '* @testcheck() {' +
+       '* @flowcheck() {' +
        '* }' +
        '*/';
 
-    const parsed = parseTestcheckComments(comments);
+    const parsed = parseflowcheckComments(comments);
 
     expect(parsed).toBe(expectation);
   });
 
 
-  it('throws if there are extra comments trailing the testcheck directive', () => {
+  it('throws if there are extra comments trailing the flowcheck directive', () => {
     const comments =
       '/*' +
-       '* @testcheck() {' +
+       '* @flowcheck() {' +
        '* }' +
        '* lorem ipsum bull shit' +
        '*/';
 
     expect(
-      () => parseTestcheckComments(comments)
+      () => parseflowcheckComments(comments)
     ).toThrow();
   });
 });

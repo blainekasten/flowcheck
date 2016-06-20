@@ -2,7 +2,7 @@
 
 require('colors');
 
-console.log('@flow-testcheck engaged!'.rainbow);
+console.log('@flowcheck engaged!'.rainbow);
 
 const parseStringifiedCode = require('./parseStringifiedCode');
 const logResults = require('./logResults');

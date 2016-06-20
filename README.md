@@ -1,4 +1,4 @@
-# flow-typecheck
+# flowcheck
 
 ![](http://g.recordit.co/JJcGkIblZj.gif)
 
@@ -13,7 +13,7 @@ The idea is this:
 
 ```js
 /*
- * @typecheck(base, expression) {
+ * @flowcheck(base, expression) {
  *   pow(base, expression) === Math.pow(base, expression)
  * }
  */

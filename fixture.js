@@ -1,5 +1,5 @@
 /*
- * @testcheck(bar) {
+ * @flowcheck(bar) {
  *   return foo(bar) === bar;
  * }
  */
@@ -10,7 +10,7 @@ function foo(bar:number) {
 
 let nonPureCounter = 0;
 /*
- * @testcheck(arg1) {
+ * @flowcheck(arg1) {
  *   return baz(arg1) === baz(arg1);
  * }
  */

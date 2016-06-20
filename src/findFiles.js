@@ -19,12 +19,18 @@
  * @flow
  */
 
+"use strict";
+
 const glob = require('glob');
 const fs = require('fs');
 
 module.exports = function findFiles(cb) {
-  console.log('  searching for @testchecks...'.yellow);
-  glob('**/*.js', { ignore: '**node_modules/**/*.js' }, (err, files) => {
+  console.log('  searching for @flowcheck\'s...'.yellow);
+
+  let globPath = '**/*.js';
+  globPath = '**/fixture.js'; // only for now until we actually build the cli
+
+  glob(globPath, { ignore: ['**node_modules/**/*.js'] }, (err, files) => {
     if (err) {
       throw new Error(err);
     }
@@ -37,10 +43,10 @@ module.exports = function findFiles(cb) {
     });
 
     const filteredForMatches = codeAndPath.filter(
-      o => o.code.search(/\@testcheck\(/) !== -1
+      o => o.code.search(/\@flowcheck\(/) !== -1
     );
 
-    console.log(`  Found ${filteredForMatches.length} file with @testcheck directives`.yellow);
+    console.log(`  Found ${filteredForMatches.length} file with @flowcheck directives`.yellow);
 
     cb(filteredForMatches);
   });
