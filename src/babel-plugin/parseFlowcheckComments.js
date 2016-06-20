@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @providesModule parseTestcheckComment
+ * @providesModule parseFlowcheckComment
  * @flow
  */
 
 "use strict";
 
-module.exports = function parseTestcheckComment(comment) {
+module.exports = function parseFlowcheckComment(comment) {
   let value = comment.value;
+  const FLOWCHECK_DIRECTIVE = 'check(';
 
-  const testcheckDirectiveStartIndex = value.search('@testcheck');
+  const flowcheckDirectiveStartIndex = value.indexOf(FLOWCHECK_DIRECTIVE);
 
-  // trim off any comments prior to testcheck directive
-  value = value.substring(testcheckDirectiveStartIndex, value.length);
+  // trim off any comments prior to flowcheck directive
+  value = value.substring(flowcheckDirectiveStartIndex, value.length);
 
   /*
    * This is for comments of the /* style
@@ -44,7 +45,7 @@ module.exports = function parseTestcheckComment(comment) {
   //or this
   value = value.replace(/\/\/\s?/g, '');
 
-  const fn = value.replace('@testcheck', 'function testcheck');
+  const fn = value.replace(FLOWCHECK_DIRECTIVE, 'function flowcheck(');
 
   // make sure code is good, throw if not
   // some parsing error occured
@@ -53,7 +54,7 @@ module.exports = function parseTestcheckComment(comment) {
   } catch(e) {
     throw new Error(
       'Flowcheck parsing error\n' +
-      '  Parsing the @testcheck comments encountered an error.'
+      '  Parsing the @flowcheck comments encountered an error.'
     );
   }
 

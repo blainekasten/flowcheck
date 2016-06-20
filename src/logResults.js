@@ -33,12 +33,12 @@ module.exports = function logResults(results) {
 };
 
 function logSuccess(name) {
-  console.log(`\nSuccess: Function "${name}" passed the testcheck!`.green);
+  console.log(`\nSuccess: Function "${name}" passed the flowcheck!`.green);
 }
 
 function logFailure(result) {
   const resultData = result.results;
-  console.log(`\nFailure: Function "${result.name}" failed the testcheck!`.red);
+  console.log(`\nFailure: Function "${result.name}" failed the flowcheck!`.red);
   console.log('  Arguments that triggered Failure:'.cyan, resultData.fail + ''.yellow);
   console.log(`\n  - FailingSize: ${resultData['failing-size']}`.cyan);
   console.log(`  - NumberOfTests: ${resultData['num-tests']}`.cyan);

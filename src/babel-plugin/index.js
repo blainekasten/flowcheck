@@ -2,11 +2,15 @@
 
 const addTestcheckCall = require('./addTestcheckCall');
 const decypherParamTypes = require('./decypherParamTypes');
-const parseTestcheckComments = require('./parseTestcheckComments');
+const parseFlowcheckComments = require('./parseFlowcheckComments');
 const t = require('babel-types');
 
 module.exports = function flowParser() {
-  const TESTCHECK_DIRECTIVE = '@testcheck';
+  // I want the directive look up to be @flowcheck
+  // but `babel-plugin-transform-flow-strip` removes the @flow part
+  // of the directive before I get it..
+  // Maybe we can submit a PR to them to only get @flow\n
+  const FLOWCHECK_DIRECTIVE = 'check\(';
 
   return {
     visitor: {
@@ -39,9 +43,9 @@ module.exports = function flowParser() {
           if (!comments) return;
 
           comments.forEach(function checkForDirective(comment) {
-            if (comment.value.search(TESTCHECK_DIRECTIVE) !== -1) {
+            if (comment.value.indexOf(FLOWCHECK_DIRECTIVE) >= 0) {
               state.set('wantsTestcheck', true);
-              state.set('parsedCommentBlock', parseTestcheckComments(comment));
+              state.set('parsedCommentBlock', parseFlowcheckComments(comment));
             }
           });
 
@@ -64,7 +68,7 @@ module.exports = function flowParser() {
 
 
         comments.forEach(function checkForDirective(comment) {
-          if (comment.value.search(TESTCHECK_DIRECTIVE) !== -1) {
+          if (comment.value.indexOf(FLOWCHECK_DIRECTIVE) >= 0) {
             throw new Error(
               'Flowcheck: Unsupported syntax. Flowcheck does not currently support comments on exported functions'
             );

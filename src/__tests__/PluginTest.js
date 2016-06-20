@@ -17,7 +17,6 @@ const results = folders.map(folder => {
   let parsedCode;
   let didThrow = false;
 
-
   if (shouldThrow) {
     try {
       parsedCode = transformCode(actualPretransform);
