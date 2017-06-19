@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "testcheck": "node ./src/index.js"
+    "testcheck": "node ./src/index.js",
+    "lint": "eslint src/"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,8 @@
   },
   "devDependencies": {
     "babel-jest": "^12.1.0",
+    "eslint": "^2.13.1",
+    "eslint-config-hudl": "^4.0.1",
     "jest-cli": "^12.1.1"
   },
   "jest": {
